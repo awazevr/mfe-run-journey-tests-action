@@ -29,4 +29,5 @@ runs:
     - name: Run journey tests
       env:
         JOURNEY_TEST_HOST: ${{ inputs.journey-test-host }}
+      shell: bash
       run: docker run -v $(pwd)/${{ inputs.journey-test-directory }}:/tests --env JOURNEY_TEST_HOST=${{ env.JOURNEY_TEST_HOST }} --env JOURNEY_TEST_HOST_USERNAME=${{ inputs.journey-test-host-username }} --env JOURNEY_TEST_HOST_PASSWORD=${{ inputs.journey-test-host-password }} testcafe/testcafe ${{ inputs.journey-test-browser }} --skip-js-errors
