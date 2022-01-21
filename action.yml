@@ -1,0 +1,32 @@
+name: "Run MFE journey tests"
+description: "Run MFE journey tests"
+
+inputs:
+  journey-test-host:
+    description: 'The full URL of the host you want to run your journey tests against.'
+    required: true
+  journey-test-directory:
+    description: 'The directory which holds your testcafe tests.'
+    required: true
+  journey-test-browser:
+    description: 'The browser you wish to run your journey tests in (`chromium` or `firefox`)'
+    required: true
+  journey-test-host-username:
+    description: 'If your host requires a username and password, pass the username here.'
+    required: false
+  journey-test-host-password:
+    description: 'If your host requires a username and password, pass the password here.'
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+    - uses: benjlevesque/short-sha@v1.2
+      id: short-sha
+      with:
+        length: 7
+    - name: Run journey tests
+      env:
+        JOURNEY_TEST_HOST: ${{ inputs.journey-test-host }}
+      run: docker run -v $(pwd)/${{ inputs.journey-test-directory }}:/tests --env JOURNEY_TEST_HOST=${{ env.JOURNEY_TEST_HOST }} --env JOURNEY_TEST_HOST_USERNAME=${{ inputs.journey-test-host-username }} --env JOURNEY_TEST_HOST_PASSWORD=${{ inputs.journey-test-host-password }} testcafe/testcafe ${{ inputs.journey-test-browser }} --skip-js-errors
